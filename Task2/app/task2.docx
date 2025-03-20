@@ -1,0 +1,82 @@
+
+## Step 1: Clone the Capstone Project
+In Jenkins:
+1. Go to **"New Item"** → Select **Freestyle Project** → Name it `Capstone_Project`.
+2. Under **Source Code Management**, select **Git**.
+3. Enter your repository URL:
+   ```
+   https://github.com/ShyamsaranRajendran/capstone.git
+   ```
+4. Add credentials if required.
+
+---
+
+## Step 2: Create the Build Pipeline
+In your Jenkins project:
+
+1. Under **Build Triggers**, enable:
+   - **Poll SCM** (for automatic builds when code changes)
+   - Use schedule format: `H/5 * * * *` (runs every 5 minutes)
+
+2. Under **Build Environment**, select:
+   - **Provide NodeJS environment** → Select `NodeJS-18`
+
+3. Under **Build** → Select **Add build step** → **Execute Shell**  
+   Add the following steps:
+
+   ```bash
+   npm install
+   npm run build
+   npm start
+   ```
+
+4. Under **Post-build Actions**, add:
+   - Archive artifacts:
+     ```
+     dist/**/*
+     ```
+
+---
+
+## Step 3: Run the Pipeline
+1. Click **Save**.
+2. On the project dashboard, click **Build Now**.
+3. Monitor the **Console Output** for logs.
+
+---
+
+## Step 4: Access the Application
+- Once the build is successful, access your project at:  
+  ```
+  http://localhost:3000
+  ```
+
+---
+
+## Step 5: Automate Tests (Optional but Recommended)
+1. Add a `test` script in your `package.json`:
+   ```json
+   "scripts": {
+     "test": "jest"
+   }
+   ```
+
+2. In Jenkins:
+   - Under **Build**, add:
+     ```bash
+     npm test
+     ```
+
+---
+
+## Step 6: Deploy to Production (Optional)
+You can integrate deployment tools like:
+- **AWS (EC2/Elastic Beanstalk)**
+- **Docker + Kubernetes**
+- **Netlify / Vercel** for frontend deployment
+
+---
+
+## Step 7: Monitor and Maintain
+- Configure Jenkins notifications via email or Slack for build alerts.
+- Regularly update dependencies for improved security and performance.
